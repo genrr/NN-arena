@@ -1,3 +1,4 @@
+import entity
 class Projectile:
 
 

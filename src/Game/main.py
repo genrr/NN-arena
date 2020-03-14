@@ -78,16 +78,29 @@ def drawBackground():
     screen.fill((24,24,24))
 
 
-
-# game loop
-running = True
-while running:
-    
-    drawBackground()
-    drawPlayers()
-    #movePlayers()
+def update(deltatime):
     p.getAction()
     p2.getAction()
+def draw():
+    drawBackground()
+    drawPlayers()
+# game loop
+running = True
+fpslimit=True
+time=pygame.time.get_ticks()
+while running:
+    
+    deltatime=pygame.time.get_ticks()-time
+    #movePlayers()
+    if(fpslimit):
+        if(deltatime>1000/60):
+            update(deltatime)
+            draw()
+            time=pygame.time.get_ticks()
+    else:
+        update(1)
+        drawPlayers()
+
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
