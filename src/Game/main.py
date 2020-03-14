@@ -16,7 +16,7 @@ fieldOfVision = 1.0
 class BaseAgent:
     def __init__(self):
         pass
-    def getAction(self, player):
+    def getAction(self, player,cd):
         pass
 
 class NeatAgent:
@@ -35,25 +35,27 @@ class NeatAgent:
 
         array[vectors] = distToWall(generateVectors(screen,p,length,vectors,fieldOfVision), p, vectors,arenaWidth,arenaHeight)/a
 
-    def getAction(self,player):
+    def getAction(self,player,cd):
        # predictions= model.predict(convert(player,))
        pass
 
 class KeyAgent(BaseAgent):
     def __init__(self):
         pass
-    def getAction(self,player):
+    def getAction(self,player,cd):
         if(up):
             player.move(arenaHeight,arenaWidth)
         if(right):
             player.rotateRight()
         if(left):
             player.rotateLeft()
+        if(fire):
+            player.fire(entities,cd)
 
 class KeyAgent2(BaseAgent):
     def __init__(self):
         pass
-    def getAction(self,player):
+    def getAction(self,player,cd):
         if(w):
             print("action")
             player.move(arenaHeight,arenaWidth)
@@ -61,6 +63,8 @@ class KeyAgent2(BaseAgent):
             player.rotateRight()
         if(a):
             player.rotateLeft()
+        if(fire2):
+            player.fire(entities,cd)
 
 # Init players
 #p = Player(KeyAgent(),630,480)
@@ -76,7 +80,7 @@ def createPlayers(agent1,agent2):
 
 
 def drawEntity(screen,e):
-    temp = pygame.transform.rotate(playerImg,360-e.angle * 180/math.pi-90)
+    temp = pygame.transform.rotate(e.img,360-e.angle * 180/math.pi-90)
     screen.blit(temp,(e.playerX,e.playerY))
     pygame.draw.lines(screen,(255,255,255),True,e.getHitBox(),1)
     
@@ -94,6 +98,22 @@ def draw(screen):
         drawEntity(screen,en)
     #drawPlayers(screen)
 # game loop
+
+def testCollision():
+    for e in entities:
+        for e2 in entities:
+            if(e!=e2):
+                r1 = pygame.Rect(e.getHitBox()[0][0],e.getHitBox()[0][1],64,64)
+                r2 = pygame.Rect(e2.getHitBox()[0][0],e.getHitBox()[0][1],32,32)
+                print(e,e2)               
+                if(isinstance(e,Player) and isinstance(e2, projectile.Projectile) and (r1.colliderect(r2))):
+                    e.setHit()
+    if(entities[0].getHitstate() or entities[1].getHitstate()):
+        return False
+    else:
+        return True
+
+                    
 def run(agent1,agent2):
     createPlayers(agent1,agent2)
     global w,a,d,up,left,right,fire,fire2
@@ -107,7 +127,6 @@ def run(agent1,agent2):
 
     # Title & icon
     pygame.display.set_caption("nn-arena")
-
 
 
     b = True
@@ -127,17 +146,17 @@ def run(agent1,agent2):
                 score_p2 -= 0.1
                 print((score_p1,score_p2))
 
-                #if collision
-                #   
+                running=testCollision()   
 
                 if(score_p1 < 0 or score_p2 < 0):
                     print("Gameover")
                     break
 
+                
         else:
             update(1)
             draw(screen)
-
+            running=testCollision()
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -213,6 +232,7 @@ def run(agent1,agent2):
 
         #pygame.time.delay(1000)
         pygame.display.update()
+    return 0
 run(KeyAgent,KeyAgent2)
 
 

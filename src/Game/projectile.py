@@ -1,13 +1,17 @@
-import entity
+import pygame
+import math
 class Projectile:
 
-
-    def __init__(self,x,y,ang):
-        self.x=x
-        self.y=y
-        self.ang=ang
+    img=pygame.image.load('projectile.png')
+    def __init__(self,x,y,angle):
+        self.playerX=x
+        self.playerY=y
+        self.angle=angle
     def move(self):
-        self.x += 3*math.cos(self.ang)
-        self.y += 3*math.sin(self.ang)
+        self.playerX += 3*math.cos(self.angle)
+        self.playerY += 3*math.sin(self.angle)
 
-    
+    def getAction(self):
+        self.move()
+    def getHitBox(self):
+        return [(self.playerX , self.playerY), (self.playerX, self.playerY+32), (self.playerX + 32, self.playerY +32), (self.playerX+32, self.playerY)]
