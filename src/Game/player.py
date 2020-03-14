@@ -45,8 +45,9 @@ class Player:
         #print(self.angle)
     
     
-    def getAction(self):
-        self.agent.getAction(self,self,self.cooldown<=0)
+    def getAction(self,game):
+        print(game)
+        self.agent.getAction(self,self.cooldown<=0,game)
         if(self.cooldown>0):
             self.cooldown=self.cooldown-1
 
