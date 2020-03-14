@@ -104,8 +104,7 @@ def testCollision():
         for e2 in entities:
             if(e!=e2):
                 r1 = pygame.Rect(e.getHitBox()[0][0],e.getHitBox()[0][1],64,64)
-                r2 = pygame.Rect(e2.getHitBox()[0][0],e.getHitBox()[0][1],32,32)
-                print(e,e2)               
+                r2 = pygame.Rect(e2.getHitBox()[0][0],e2.getHitBox()[0][1],32,32)             
                 if(isinstance(e,Player) and isinstance(e2, projectile.Projectile) and (r1.colliderect(r2))):
                     e.setHit()
     if(entities[0].getHitstate() or entities[1].getHitstate()):
@@ -129,9 +128,8 @@ def run(agent1,agent2):
     pygame.display.set_caption("nn-arena")
 
 
-    b = True
     running = True
-    fpslimit=True
+    fpslimit=False
     time=pygame.time.get_ticks()
     while running:
         
@@ -142,14 +140,12 @@ def run(agent1,agent2):
                 update(deltatime)
                 draw(screen)
                 time=pygame.time.get_ticks()
+                
+                running = testCollision()
+
                 score_p1 -= 0.1
                 score_p2 -= 0.1
-                print((score_p1,score_p2))
-
-                running=testCollision()   
-
                 if(score_p1 < 0 or score_p2 < 0):
-                    print("Gameover")
                     break
 
                 
@@ -157,6 +153,10 @@ def run(agent1,agent2):
             update(1)
             draw(screen)
             running=testCollision()
+            score_p1 -= 0.1
+            score_p2 -= 0.1
+            if(score_p1 < 0 or score_p2 < 0):
+                break
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -232,7 +232,11 @@ def run(agent1,agent2):
 
         #pygame.time.delay(1000)
         pygame.display.update()
-    return 0
+    if entities[0].getHitstate():
+        return (0,score_p2)
+    elif entities[1].getHitstate():
+        return (score_p1,0)
+    return (0,0)
 run(KeyAgent,KeyAgent2)
 
 
