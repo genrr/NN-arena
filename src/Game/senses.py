@@ -17,7 +17,7 @@ def generateVectors(s, p, length, noOfVectors, fieldOfVision):
         vectors[j] = (p.playerX + length*math.cos(slope) + 32, p.playerY + length*math.sin(slope) + 32)       
         pygame.draw.line(s, (255,255,255), (p.playerX+32, p.playerY+32), vectors[j], 1)
         slope += fieldOfVision/noOfVectors
-    #print(vectors)    
+    #print(math.sqrt(((p.playerX +32) - vectors[0][0])**2+((p.playerY +32) - vectors[0][1])**2))    
     
     return vectors
 
@@ -87,9 +87,7 @@ def distToPlayer(v, PlayerList, noOfVectors):
             lmaxX = l(currentPlayer.playerX+32,currentPlayer.playerY+32,tempX,tempY,maxX)
 
             if((lminX >= minY and lminX <= maxY) or (lmaxX >= minY and lmaxX <= maxY)):
-                distX = tempX
-                distY = tempY
-                distanceArray[j] = (math.fabs(currentPlayer.playerX - distX), math.fabs(currentPlayer.playerY - distY))                    
+                distanceArray[j] = (math.fabs(currentPlayer.playerX - otherPlayer.playerX), math.fabs(currentPlayer.playerY - otherPlayer.playerY))                    
             else:
                 distanceArray[j] = (0,0)
 

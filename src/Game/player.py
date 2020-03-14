@@ -3,12 +3,14 @@ import pygame
 
 class Player:
 
-
-    def __init__(self,agent,startX,startY):
+    def setImage(self,img):
+        self.img=img
+    def __init__(self,agent,startX,startY,img):
         self.playerX = startX
         self.playerY = startY
         self.angle = -math.pi/2.0
         self.agent=agent
+        self.setImage(img)
 
     def move(self):
         self.playerX += 0.6*math.cos(self.angle)
@@ -25,7 +27,7 @@ class Player:
     
     
     def getAction(self):
-        self.agent.getAction(self)
+        self.agent.getAction(self,self)
 
     def getHitBox(self):
         return [(self.playerX , self.playerY), (self.playerX, self.playerY+64), (self.playerX + 64, self.playerY +64), (self.playerX+64, self.playerY)]
