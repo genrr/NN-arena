@@ -7,32 +7,44 @@ import neat
 up,down,left,right,fire=False,False,False,False,False
 w,s,a,d,fire2=False,False,False,False,False
 entities=[]
+vectorLength = 512.0
+vectors = 4
+arenaWidth = 960
+arenaHeight = 720
+fieldOfVision = 1.0
+
 class BaseAgent:
     def __init__(self):
         pass
     def getAction(self, player):
         pass
+
 class NeatAgent:
     def __init__(self, genome, config):
 
         pass
-    def convert(self,p,p2,vectors,vectorLength):
+    def convert(self,p,p2):
         array = []
 
         for i in range(vectors):
             a = distToPlayer(generateVectors(screen,p,length,vectors,fieldOfVision), [p,p2], vectors)[i]
             length = math.sqrt(a[0]**2+a[1]**2)
             array[i] = length/vectorLength
-        array[vectors] = distToWall(generateVectors(screen,p,length,vectors,fieldOfVision), p, vectors)
+        a = min(arenaWidth,arenaHeight)
+        a = a/2
+
+        array[vectors] = distToWall(generateVectors(screen,p,length,vectors,fieldOfVision), p, vectors,arenaWidth,arenaHeight)/a
 
     def getAction(self,player):
        # predictions= model.predict(convert(player,))
+       pass
+
 class KeyAgent(BaseAgent):
     def __init__(self):
         pass
     def getAction(self,player):
         if(up):
-            player.move()
+            player.move(arenaHeight,arenaWidth)
         if(right):
             player.rotateRight()
         if(left):
@@ -44,7 +56,7 @@ class KeyAgent2(BaseAgent):
     def getAction(self,player):
         if(w):
             print("action")
-            player.move()
+            player.move(arenaHeight,arenaWidth)
         if(d):
             player.rotateRight()
         if(a):
@@ -79,7 +91,6 @@ def update(deltatime):
 def draw(screen):
     drawBackground(screen)
     for en in entities:
-        en.getAction()
         drawEntity(screen,en)
     #drawPlayers(screen)
 # game loop
@@ -88,11 +99,7 @@ def run(agent1,agent2):
     global w,a,d,up,left,right,fire,fire2
     pygame.init()
 
-    vectorLength = 512.0
-    vectors = 4
-    arenaWidth = 960
-    arenaHeight = 720
-    fieldOfVision = 1.0
+
 
 
     #create screen

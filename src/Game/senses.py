@@ -23,17 +23,20 @@ def generateVectors(s, p, length, noOfVectors, fieldOfVision):
 
 
 
-#wall detection:
 
-wallWest = 100
-wallNorth = 100
-wallEast = 960 - 100
-wallSouth = 720 - 100
 
 
 # returns agents minimum distance to borders of the screen
 
-def distToWall(v,p,noOfVectors):
+def distToWall(v,p,noOfVectors,width,height):
+
+    #wall detection:
+
+    wallWest = 0
+    wallNorth = 0
+    wallEast = width - 64
+    wallSouth = height - 64
+
     for j in range(noOfVectors):
             tempX = v[j][0]
             tempY = v[j][1]

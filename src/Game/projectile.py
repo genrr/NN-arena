@@ -7,7 +7,7 @@ class Projectile:
         self.y=y
         self.ang=ang
     def move(self):
-        self.x += 1*math.cos(self.ang)
-        self.y += 1*math.sin(self.ang)
+        self.x += 3*math.cos(self.ang)
+        self.y += 3*math.sin(self.ang)
 
     
