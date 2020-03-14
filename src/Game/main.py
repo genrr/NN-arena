@@ -1,7 +1,7 @@
 import pygame
 from senses import *
 from player import *
-import neat
+#import neat
 #init pygame
 
 up,down,left,right,fire=False,False,False,False,False
@@ -99,7 +99,7 @@ def run(agent1,agent2):
     global w,a,d,up,left,right,fire,fire2
     pygame.init()
 
-
+    score_p1, score_p2 = 120, 120
 
 
     #create screen
@@ -123,6 +123,17 @@ def run(agent1,agent2):
                 update(deltatime)
                 draw(screen)
                 time=pygame.time.get_ticks()
+                score_p1 -= 0.1
+                score_p2 -= 0.1
+                print((score_p1,score_p2))
+
+                #if collision
+                #   
+
+                if(score_p1 < 0 or score_p2 < 0):
+                    print("Gameover")
+                    break
+
         else:
             update(1)
             draw(screen)
