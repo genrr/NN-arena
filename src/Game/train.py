@@ -60,10 +60,10 @@ def run(config_file):
     p.add_reporter(neat.StdOutReporter(True))
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
-    p.add_reporter(neat.Checkpointer(5))
+    p.add_reporter(neat.Checkpointer(5,10,'./NeatCheckpoints/neat-checkpoint-'))
 
     # Run for up to 300 generations.
-    winner = p.run(eval_genomes, 300)
+    winner = p.run(eval_genomes, 10)
 
     # Display the winning genome.
     print('\nBest genome:\n{!s}'.format(winner))
@@ -72,7 +72,7 @@ def run(config_file):
     print('\nOutput:')
     winner_net = neat.nn.FeedForwardNetwork.create(winner, config)
 
-    p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-4')
+    p = neat.Checkpointer.restore_checkpoint('./NeatCheckpoints/neat-checkpoint-9')
     p.run(eval_genomes, 10)
 
 
