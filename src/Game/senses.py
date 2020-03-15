@@ -43,8 +43,7 @@ def distToWall(v,p,noOfVectors,width,height):
             #print(tempX,tempY)
 
             if (tempX > wallEast or tempY > wallSouth or tempX < wallWest or tempY < wallNorth):
-                print("near the edge!")
-
+                pass
             #print(min(math.fabs(wallEast - p.PlayerX), math.fabs(wallSouth - p.PlayerY)))
 
             return min(math.fabs(wallEast - p.playerX), math.fabs(wallWest - p.playerX), math.fabs(wallSouth - p.playerY), math.fabs(wallNorth - p.playerY))
