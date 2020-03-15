@@ -6,7 +6,7 @@ import math
 
 
 
-def generateVectors(s, p, length, noOfVectors, fieldOfVision):
+def generateVectors( p, length, noOfVectors, fieldOfVision):
     vectors = [None] * noOfVectors
     slope = p.angle - fieldOfVision * (3.0/6.0)
 
@@ -15,7 +15,7 @@ def generateVectors(s, p, length, noOfVectors, fieldOfVision):
 
         #print(slope)
         vectors[j] = (p.playerX + length*math.cos(slope) + 32, p.playerY + length*math.sin(slope) + 32)       
-        pygame.draw.line(s, (255,255,255), (p.playerX+32, p.playerY+32), vectors[j], 1)
+        #pygame.draw.line(s, (255,255,255), (p.playerX+32, p.playerY+32), vectors[j], 1)
         slope += fieldOfVision/noOfVectors
     #print(math.sqrt(((p.playerX +32) - vectors[0][0])**2+((p.playerY +32) - vectors[0][1])**2))    
     

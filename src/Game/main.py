@@ -6,7 +6,7 @@ from player import *
 class BaseAgent:
     def __init__(self):
         pass
-    def getAction(self, player,cd):
+    def getAction(self, player,cd,game):
         pass
 
 class NeatAgent:
@@ -34,7 +34,6 @@ class KeyAgent(BaseAgent):
         pass
     def getAction(self,player,cd,game):
         if(game.up):
-            print("this ran")
             player.move(game.arenaHeight,game.arenaWidth)
         if(game.right):
             player.rotateRight()
@@ -48,7 +47,6 @@ class KeyAgent2(BaseAgent):
         pass
     def getAction(self,player,cd,game):
         if(game.w):
-            print("action")
             player.move(game.arenaHeight,game.arenaWidth)
         if(game.d):
             player.rotateRight()
@@ -92,7 +90,6 @@ class Game:
 
     def update(self,deltatime):
         for en in self.entities:
-            #print(en)
             en.getAction(self)
     def draw(self,screen):
         self.drawBackground(screen)
@@ -115,7 +112,7 @@ class Game:
             return True
 
                         
-    def run(self,agent1,agent2):
+    def run(self,agent1,agent2,fps):
         self.createPlayers(agent1,agent2)
         pygame.init()
 
@@ -130,7 +127,7 @@ class Game:
 
 
         running = True
-        fpslimit=True
+        fpslimit=fps
         time=pygame.time.get_ticks()
         while running:
             
@@ -176,23 +173,18 @@ class Game:
 
 
                     if event.key == pygame.K_w:
-                        print("w")
                         self.w=True
 
                     if event.key == pygame.K_a:
-                        print("a")
                         self.a=True
 
                     if event.key == pygame.K_d:
                         self.d=True
-                        print(self.d)
 
 
                     if event.key == pygame.K_g:
-                        print("fire")
                         self.fire=True
                     if event.key == pygame.K_f:
-                        print("fire")
                         self.fire2=True
 
 
@@ -207,20 +199,15 @@ class Game:
                         self.right=False
                     
                     if event.key == pygame.K_w:
-                        print("w released")
                         self.w=False
                     if event.key == pygame.K_a:
-                        print("a")
                         self.a=False
                     if event.key == pygame.K_d:
-                        print("d")
                         self.d=False
 
                     if event.key == pygame.K_g:
-                        print("fire stopped")
                         self.fire=False
                     if event.key == pygame.K_f:
-                        print("fire stopped")
                         self.fire2=False
                     
             length = self.vectorLength
@@ -241,7 +228,7 @@ class Game:
             temp = (0,0)
         self.entities = []
         return temp
-r=Game()
-r.run(KeyAgent(),KeyAgent2())
+#r=Game()
+#r.run(KeyAgent(),KeyAgent2())
 
 
