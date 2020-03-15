@@ -2,68 +2,80 @@ import pygame
 from senses import *
 from player import *
 #import neat
-#init pygame
+# init pygame
+
+
 class BaseAgent:
     def __init__(self):
         pass
-    def getAction(self, player,cd,game):
+
+    def getAction(self, player, cd, game):
         pass
+
 
 class NeatAgent:
     def __init__(self, genome, config):
 
         pass
-    def convert(self,p,p2):
+
+    def convert(self, p, p2):
         array = []
 
         for i in range(vectors):
-            a = distToPlayer(generateVectors(screen,p,length,vectors,fieldOfVision), [p,p2], vectors)[i]
+            a = distToPlayer(generateVectors(
+                screen, p, length, vectors, fieldOfVision), [p, p2], vectors)[i]
             length = math.sqrt(a[0]**2+a[1]**2)
             array[i] = length/vectorLength
-        a = min(arenaWidth,arenaHeight)
+        a = min(arenaWidth, arenaHeight)
         a = a/2
 
-        array[vectors] = distToWall(generateVectors(screen,p,length,vectors,fieldOfVision), p, vectors,arenaWidth,arenaHeight)/a
+        array[vectors] = distToWall(generateVectors(
+            screen, p, length, vectors, fieldOfVision), p, vectors, arenaWidth, arenaHeight)/a
 
-    def getAction(self,player,cd,game):
+    def getAction(self, player, cd, game):
         # predictions= model.predict(convert(player,))
         pass
+
 
 class KeyAgent(BaseAgent):
     def __init__(self):
         pass
-    def getAction(self,player,cd,game):
+
+    def getAction(self, player, cd, game):
         if(game.up):
-            player.move(game.arenaHeight,game.arenaWidth)
+            player.move(game.arenaHeight, game.arenaWidth)
         if(game.right):
             player.rotateRight()
         if(game.left):
             player.rotateLeft()
         if(game.fire):
-            player.fire(game.entities,cd)
+            player.fire(game.entities, cd)
+
 
 class KeyAgent2(BaseAgent):
     def __init__(self):
         pass
-    def getAction(self,player,cd,game):
+
+    def getAction(self, player, cd, game):
         if(game.w):
-            player.move(game.arenaHeight,game.arenaWidth)
+            player.move(game.arenaHeight, game.arenaWidth)
         if(game.d):
             player.rotateRight()
         if(game.a):
             player.rotateLeft()
         if(game.fire2):
-            player.fire(game.entities,cd)
+            player.fire(game.entities, cd)
+
+
 class Game:
-    up,down,left,right,fire=False,False,False,False,False
-    w,s,a,d,fire2=False,False,False,False,False
-    entities=[]
+    up, down, left, right, fire = False, False, False, False, False
+    w, s, a, d, fire2 = False, False, False, False, False
+    entities = []
     vectorLength = 512.0
     vectors = 4
     arenaWidth = 960
     arenaHeight = 720
     fieldOfVision = 1.0
-
 
     # Init players
     #p = Player(KeyAgent(),630,480)
@@ -71,74 +83,70 @@ class Game:
     playerImg = pygame.image.load('pilot.png')
     player2Img = pygame.image.load('pilot2.png')
 
-    def createPlayers(self,agent1,agent2):
-        self.entities.append(Player(agent1,630,480,self.playerImg))
-        self.entities.append(Player(agent2,270,480,self.player2Img))
+    def createPlayers(self, agent1, agent2):
+        self.entities.append(Player(agent1, 630, 480, self.playerImg))
+        self.entities.append(Player(agent2, 270, 480, self.player2Img))
 
+    def drawEntity(self, screen, e):
+        temp = pygame.transform.rotate(e.img, 360-e.angle * 180/math.pi-90)
+        screen.blit(temp, (e.playerX, e.playerY))
+        pygame.draw.lines(screen, (255, 255, 255), True, e.getHitBox(), 1)
 
-
-
-    def drawEntity(self,screen,e):
-        temp = pygame.transform.rotate(e.img,360-e.angle * 180/math.pi-90)
-        screen.blit(temp,(e.playerX,e.playerY))
-        pygame.draw.lines(screen,(255,255,255),True,e.getHitBox(),1)
-        
-    def drawBackground(self,screen):
+    def drawBackground(self, screen):
         # screen color
-        screen.fill((24,24,24))
+        screen.fill((24, 24, 24))
 
-
-    def update(self,deltatime):
+    def update(self, deltatime):
         for en in self.entities:
             en.getAction(self)
-    def draw(self,screen):
+
+    def draw(self, screen):
         self.drawBackground(screen)
         for en in self.entities:
-            self.drawEntity(screen,en)
-        #drawPlayers(screen)
+            self.drawEntity(screen, en)
+        # drawPlayers(screen)
     # game loop
 
     def testCollision(self):
         for e in self.entities:
             for e2 in self.entities:
-                if(e!=e2):
-                    r1 = pygame.Rect(e.getHitBox()[0][0],e.getHitBox()[0][1],64,64)
-                    r2 = pygame.Rect(e2.getHitBox()[0][0],e2.getHitBox()[0][1],32,32)             
-                    if(isinstance(e,Player) and isinstance(e2, projectile.Projectile) and (r1.colliderect(r2))):
+                if(e != e2):
+                    r1 = pygame.Rect(
+                        e.getHitBox()[0][0], e.getHitBox()[0][1], 64, 64)
+                    r2 = pygame.Rect(
+                        e2.getHitBox()[0][0], e2.getHitBox()[0][1], 32, 32)
+                    if(isinstance(e, Player) and isinstance(e2, projectile.Projectile) and (r1.colliderect(r2))):
                         e.setHit()
         if(self.entities[0].getHitstate() or self.entities[1].getHitstate()):
             return False
         else:
             return True
 
-                        
-    def run(self,agent1,agent2,fps):
-        self.createPlayers(agent1,agent2)
+    def run(self, agent1, agent2, fps):
+        self.createPlayers(agent1, agent2)
         pygame.init()
 
         score_p1, score_p2 = 120, 120
 
-
-        #create screen
-        screen = pygame.display.set_mode((self.arenaWidth,self.arenaHeight))
+        # create screen
+        screen = pygame.display.set_mode((self.arenaWidth, self.arenaHeight))
 
         # Title & icon
         pygame.display.set_caption("nn-arena")
 
-
         running = True
-        fpslimit=fps
-        time=pygame.time.get_ticks()
+        fpslimit = fps
+        time = pygame.time.get_ticks()
         while running:
-            
-            deltatime=pygame.time.get_ticks()-time
-            #movePlayers()
+
+            deltatime = pygame.time.get_ticks()-time
+            # movePlayers()
             if(fpslimit):
-                if(deltatime>1000/60):
+                if(deltatime > 1000/60):
                     self.update(deltatime)
                     self.draw(screen)
-                    time=pygame.time.get_ticks()
-                    
+                    time = pygame.time.get_ticks()
+
                     running = self.testCollision()
 
                     score_p1 -= 0.1
@@ -146,89 +154,80 @@ class Game:
                     if(score_p1 < 0 or score_p2 < 0):
                         break
 
-                    
             else:
                 self.update(1)
                 self.draw(screen)
-                running=self.testCollision()
+                running = self.testCollision()
                 score_p1 -= 0.1
                 score_p2 -= 0.1
                 if(score_p1 < 0 or score_p2 < 0):
                     break
-            
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP:
-                        self.up=True
+                        self.up = True
                     if event.key == pygame.K_DOWN:
-                        self.down=True
+                        self.down = True
 
                     if event.key == pygame.K_LEFT:
-                        self.left=True
+                        self.left = True
 
                     if event.key == pygame.K_RIGHT:
-                        self.right=True
-
+                        self.right = True
 
                     if event.key == pygame.K_w:
-                        self.w=True
+                        self.w = True
 
                     if event.key == pygame.K_a:
-                        self.a=True
+                        self.a = True
 
                     if event.key == pygame.K_d:
-                        self.d=True
-
+                        self.d = True
 
                     if event.key == pygame.K_g:
-                        self.fire=True
+                        self.fire = True
                     if event.key == pygame.K_f:
-                        self.fire2=True
-
+                        self.fire2 = True
 
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_UP:
-                        self.up=False
+                        self.up = False
                     if event.key == pygame.K_DOWN:
-                        self.down=False
+                        self.down = False
                     if event.key == pygame.K_LEFT:
-                        self.left=False
+                        self.left = False
                     if event.key == pygame.K_RIGHT:
-                        self.right=False
-                    
+                        self.right = False
+
                     if event.key == pygame.K_w:
-                        self.w=False
+                        self.w = False
                     if event.key == pygame.K_a:
-                        self.a=False
+                        self.a = False
                     if event.key == pygame.K_d:
-                        self.d=False
+                        self.d = False
 
                     if event.key == pygame.K_g:
-                        self.fire=False
+                        self.fire = False
                     if event.key == pygame.K_f:
-                        self.fire2=False
-                    
+                        self.fire2 = False
+
             length = self.vectorLength
 
             #print("vectors for agent 1",generateVectors(screen,p,length,vectors,fieldOfVision))
             #print("vectors for agent 2",generateVectors(screen,p2,length,vectors,fieldOfVision))
 
-            
-            
-
-            #pygame.time.delay(1000)
+            # pygame.time.delay(1000)
             pygame.display.update()
         if self.entities[0].getHitstate():
-            temp = (0,score_p2)
+            temp = (0, score_p2)
         elif self.entities[1].getHitstate():
-            temp= (score_p1,0)
+            temp = (score_p1, 0)
         else:
-            temp = (0,0)
+            temp = (0, 0)
         self.entities = []
         return temp
-#r=Game()
-#r.run(KeyAgent(),KeyAgent2())
-
-
+# r=Game()
+# r.run(KeyAgent(),KeyAgent2())
