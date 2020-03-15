@@ -3,7 +3,7 @@ from senses import *
 import neat
 import os
 import tqdm
-
+import random
 class NeatAgent(main.BaseAgent):
     def __init__(self,network):
         self.model=network
@@ -37,9 +37,9 @@ class NeatAgent(main.BaseAgent):
 
 def eval_genomes(genomes, config):
     r=main.Game()
-    i=len(genomes)
+    g2=random.sample(genomes,20)
     for genome_id, genome in tqdm.tqdm(genomes):
-        for genome_id2, genome2 in genomes:
+        for genome_id2, genome2 in g2:
             genome.fitness = 4.0
             net = neat.nn.FeedForwardNetwork.create(genome, config)
             net2 = neat.nn.FeedForwardNetwork.create(genome2,config)
