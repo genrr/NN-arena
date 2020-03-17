@@ -25,10 +25,10 @@ class NeatAgent(main.BaseAgent):
             length = math.sqrt(a[0]**2+a[1]**2)
             array.append(length/game.vectorLength)
         a = min(game.arenaWidth, game.arenaHeight)
-        a = a/2
-        # print(game.vectors)
-        array[game.vectors-1] = distToWall(generateVectors(p, length, game.vectors,
-                                                           game.fieldOfVision), p, game.vectors, game.arenaWidth, game.arenaHeight)/a
+        a = a/2.0
+
+        array.append(distToWall(p, game.arenaWidth, game.arenaHeight)/a)
+
         return array
 
     def getAction(self, player, cd, game):

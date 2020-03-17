@@ -25,12 +25,11 @@ class NeatAgent:
             a = distToPlayer(generateVectors(
                 screen, p, length, vectors, fieldOfVision), [p, p2], vectors)[i]
             length = math.sqrt(a[0]**2+a[1]**2)
-            array[i] = length/vectorLength
+            array.append(length/vectorLength)
         a = min(arenaWidth, arenaHeight)
-        a = a/2
+        a = a/2.0
 
-        array[vectors] = distToWall(generateVectors(
-            screen, p, length, vectors, fieldOfVision), p, vectors, arenaWidth, arenaHeight)/a
+        array.append(distToWall(p, arenaWidth, arenaHeight)/a)
 
     def getAction(self, player, cd, game):
         # predictions= model.predict(convert(player,))
