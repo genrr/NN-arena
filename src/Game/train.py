@@ -4,11 +4,11 @@ import neat
 import os
 import tqdm
 import random
-
+import pickle
 
 # set SDL to use the dummy NULL video driver,
 #   so it doesn't need a windowing system.
-# os.environ["SDL_VIDEODRIVER"] = "dummy"
+#os.environ["SDL_VIDEODRIVER"] = "dummy"
 
 
 class NeatAgent(main.BaseAgent):
@@ -51,8 +51,8 @@ def eval_genomes(genomes, config):
     r = main.Game()
     g2 = random.sample(genomes, 20)
     for genome_id, genome in tqdm.tqdm(genomes):
+        genome.fitness = 0.0
         for genome_id2, genome2 in g2:
-            genome.fitness = 4.0
             net = neat.nn.FeedForwardNetwork.create(genome, config)
             net2 = neat.nn.FeedForwardNetwork.create(genome2, config)
             #output = net.activate(xi)
@@ -76,7 +76,7 @@ def run(config_file):
         5, 10, './NeatCheckpoints/neat-checkpoint-'))
 
     # Run for up to 300 generations.
-    winner = p.run(eval_genomes, 10)
+    winner = p.run(eval_genomes, 50)
 
     # Display the winning genome.
     print('\nBest genome:\n{!s}'.format(winner))
@@ -84,7 +84,7 @@ def run(config_file):
     # Show output of the most fit genome against training data.
     print('\nOutput:')
     winner_net = neat.nn.FeedForwardNetwork.create(winner, config)
-
+    pickle.dump(winner_net, open( "./NeatCheckpoints/save.pickle", "wb" ))
     p = neat.Checkpointer.restore_checkpoint(
         './NeatCheckpoints/neat-checkpoint-9')
     p.run(eval_genomes, 10)

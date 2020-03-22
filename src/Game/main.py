@@ -108,6 +108,10 @@ class Game:
 
     def testCollision(self):
         for e in self.entities:
+            if(isinstance(e,projectile.Projectile) and (e.playerX>self.arenaWidth or e.playerX<0 or e.playerY>self.arenaHeight or e.playerY<0)):
+                self.entities.remove(e)
+                break
+        for e in self.entities:
             for e2 in self.entities:
                 if(e != e2):
                     r1 = pygame.Rect(
