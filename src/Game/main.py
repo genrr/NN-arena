@@ -79,8 +79,12 @@ class Game:
     # Init players
     #p = Player(KeyAgent(),630,480)
     #p2 = Player(KeyAgent2(),270,480)
-    playerImg = pygame.image.load('pilot.png')
-    player2Img = pygame.image.load('pilot2.png')
+    playerImg = pygame.transform.scale(pygame.image.load('pilot.png'),(64,64))
+    player2Img = pygame.transform.scale(pygame.image.load('pilot2.png'),(64,64))
+
+    def loadPlayerImages(self,URL1,URL2):
+        self.playerImg = pygame.transform.scale(pygame.image.load(URL1),(64,64))
+        self.player2Img = pygame.transform.scale(pygame.image.load(URL2),(64,64))
 
     def createPlayers(self, agent1, agent2):
         self.entities.append(Player(agent1, 630, 480, self.playerImg))
@@ -126,6 +130,7 @@ class Game:
             return True
 
     def run(self, agent1, agent2, fps):
+        self.loadPlayerImages("./res/rockets/rocket 4 blue gray.png","./res/rockets/rocket 3 light blue orange.png")
         self.createPlayers(agent1, agent2)
         pygame.init()
 
