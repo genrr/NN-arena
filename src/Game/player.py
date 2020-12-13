@@ -42,7 +42,7 @@ class Player:
         #self.playerY -= 0.6*math.cos(self.angle)
 
     def fire(self, ent, canShoot):
-        if (canShoot):
+        if canShoot:
             ent.append(projectile.Projectile(self.playerX+16+64*math.cos(self.angle),
                                              self.playerY+16+64*math.sin(self.angle), self.angle))
             self.cooldown = self.cooldownMax
@@ -53,7 +53,7 @@ class Player:
 
     def getAction(self, game):
         self.agent.getAction(self, self.cooldown <= 0, game)
-        if(self.cooldown > 0):
+        if self.cooldown > 0:
             self.cooldown = self.cooldown-1
 
     def getHitBox(self):

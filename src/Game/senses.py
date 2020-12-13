@@ -11,9 +11,9 @@ def generateVectors(p, length, noOfVectors, fieldOfVision):
     
     r = halfOfVision*2.0
 
-    if(noOfVectors > 1):
+    if noOfVectors > 1:
         slopeChange = r/(noOfVectors- 1)
-    elif(noOfVectors == 1):
+    elif noOfVectors == 1:
         vectors[0] = (p.playerX + length*math.cos(p.angle) + 32, p.playerY + length*math.sin(p.angle) + 32)
         return vectors
     else:
@@ -44,7 +44,7 @@ def distToWall(p, width, height):
 
 def l(x1, y1, x2, y2, x):
     xChange = (x2 - x1)
-    if(xChange == 0):
+    if xChange == 0:
         xChange = 1
     return (y2-y1)/xChange * (x - x1) + y1
 
@@ -79,14 +79,14 @@ def distToPlayer(v, PlayerList, noOfVectors):
             pY = currentPlayer.playerY+32
 
             # check if hitbox Rect collides with another Rect, which has the vector as its diagonal
-            if(pygame.Rect(min(pX,tempX),min(pY,tempY),abs(pX-tempX),abs(pY-tempY)).colliderect(minX,minY,abs(minX-maxX),abs(minY-maxY))):
+            if pygame.Rect(min(pX, tempX), min(pY, tempY), abs(pX - tempX), abs(pY - tempY)).colliderect(minX, minY, abs(minX - maxX), abs(minY - maxY)):
                 # compute a line through (pX,pY) & (tempX,tempY) at minimum and maximum x of hitbox
                 lminX = l(pX, pY, tempX, tempY, minX)
                 lmaxX = l(pX, pY, tempX, tempY, maxX)
 
                 # test if line collides with hitbox: if line has values in between minY and maxY at minimum x or maximum x of hitbox
                 # or has smaller value than minY at minimum x and larger than maxY at maximum x(and vice versa), the line has to intersect the hitbox
-                if((lminX >= minY and lminX <= maxY) or (lmaxX >= minY and lmaxX <= maxY) or (lminX <= minY and lmaxX >= maxY) or (lminX >= maxY and lmaxX <= minY)):
+                if (minY <= lminX <= maxY) or (minY <= lmaxX <= maxY) or (lminX <= minY and lmaxX >= maxY) or (lminX >= maxY and lmaxX <= minY):
                     distanceArray[j] = (math.fabs(currentPlayer.playerX - otherPlayer.playerX), math.fabs(currentPlayer.playerY - otherPlayer.playerY))
                 else:
                     distanceArray[j] = (0,0)

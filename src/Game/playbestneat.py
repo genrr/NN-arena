@@ -1,3 +1,5 @@
+import NeatAgent
+import keyagent
 import train
 import main
 import pickle
@@ -9,4 +11,4 @@ config_file= os.path.join(local_dir, 'config-feedforward')
 config=neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
                          config_file)
-r.run(train.NeatAgent(pickle.load(open( "./NeatCheckpoints/save.pickle", "rb" ))), main.KeyAgent(), True )
+r.run(NeatAgent.NeatAgent(pickle.load(open("./NeatCheckpoints/save.pickle", "rb"))), keyagent.KeyAgent(), True)

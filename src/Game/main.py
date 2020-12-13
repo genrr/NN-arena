@@ -1,69 +1,9 @@
-import pygame
-from senses import *
+from keyagent import KeyAgent
+from keyagent2 import KeyAgent2
 from player import *
-#import neat
+
+# import neat
 # init pygame
-
-
-class BaseAgent:
-    def __init__(self):
-        pass
-
-    def getAction(self, player, cd, game):
-        pass
-
-
-class NeatAgent:
-    def __init__(self, genome, config):
-
-        pass
-
-    def convert(self, p, p2):
-        array = []
-
-        for i in range(vectors):
-            a = distToPlayer(generateVectors(
-                screen, p, length, vectors, fieldOfVision), [p, p2], vectors)[i]
-            length = math.sqrt(a[0]**2+a[1]**2)
-            array.append(length/vectorLength)
-        a = min(arenaWidth, arenaHeight)
-        a = a/2.0
-
-        array.append(distToWall(p, arenaWidth, arenaHeight)/a)
-
-    def getAction(self, player, cd, game):
-        # predictions= model.predict(convert(player,))
-        pass
-
-
-class KeyAgent(BaseAgent):
-    def __init__(self):
-        pass
-
-    def getAction(self, player, cd, game):
-        if(game.up):
-            player.move(game.arenaHeight, game.arenaWidth)
-        if(game.right):
-            player.rotateRight()
-        if(game.left):
-            player.rotateLeft()
-        if(game.fire):
-            player.fire(game.entities, cd)
-
-
-class KeyAgent2(BaseAgent):
-    def __init__(self):
-        pass
-
-    def getAction(self, player, cd, game):
-        if(game.w):
-            player.move(game.arenaHeight, game.arenaWidth)
-        if(game.d):
-            player.rotateRight()
-        if(game.a):
-            player.rotateLeft()
-        if(game.fire2):
-            player.fire(game.entities, cd)
 
 
 class Game:
@@ -77,21 +17,21 @@ class Game:
     fieldOfVision = 1.0
 
     # Init players
-    #p = Player(KeyAgent(),630,480)
-    #p2 = Player(KeyAgent2(),270,480)
-    playerImg = pygame.transform.scale(pygame.image.load('pilot.png'),(64,64))
-    player2Img = pygame.transform.scale(pygame.image.load('pilot2.png'),(64,64))
+    # p = Player(KeyAgent(),630,480)
+    # p2 = Player(KeyAgent2(),270,480)
+    playerImg = pygame.transform.scale(pygame.image.load('pilot.png'), (64, 64))
+    player2Img = pygame.transform.scale(pygame.image.load('pilot2.png'), (64, 64))
 
-    def loadPlayerImages(self,URL1,URL2):
-        self.playerImg = pygame.transform.scale(pygame.image.load(URL1),(64,64))
-        self.player2Img = pygame.transform.scale(pygame.image.load(URL2),(64,64))
+    def loadPlayerImages(self, URL1, URL2):
+        self.playerImg = pygame.transform.scale(pygame.image.load(URL1), (64, 64))
+        self.player2Img = pygame.transform.scale(pygame.image.load(URL2), (64, 64))
 
     def createPlayers(self, agent1, agent2):
         self.entities.append(Player(agent1, 630, 480, self.playerImg))
         self.entities.append(Player(agent2, 270, 480, self.player2Img))
 
     def drawEntity(self, screen, e):
-        temp = pygame.transform.rotate(e.img, 360-e.angle * 180/math.pi-90)
+        temp = pygame.transform.rotate(e.img, 360 - e.angle * 180 / math.pi - 90)
         screen.blit(temp, (e.playerX, e.playerY))
         pygame.draw.lines(screen, (255, 255, 255), True, e.getHitBox(), 1)
 
@@ -108,29 +48,31 @@ class Game:
         for en in self.entities:
             self.drawEntity(screen, en)
         # drawPlayers(screen)
+
     # game loop
 
     def testCollision(self):
         for e in self.entities:
-            if(isinstance(e,projectile.Projectile) and (e.playerX>self.arenaWidth or e.playerX<0 or e.playerY>self.arenaHeight or e.playerY<0)):
+            if (isinstance(e, projectile.Projectile) and (
+                    e.playerX > self.arenaWidth or e.playerX < 0 or e.playerY > self.arenaHeight or e.playerY < 0)):
                 self.entities.remove(e)
                 break
         for e in self.entities:
             for e2 in self.entities:
-                if(e != e2):
+                if e != e2:
                     r1 = pygame.Rect(
                         e.getHitBox()[0][0], e.getHitBox()[0][1], 64, 64)
                     r2 = pygame.Rect(
                         e2.getHitBox()[0][0], e2.getHitBox()[0][1], 32, 32)
-                    if(isinstance(e, Player) and isinstance(e2, projectile.Projectile) and (r1.colliderect(r2))):
+                    if isinstance(e, Player) and isinstance(e2, projectile.Projectile) and (r1.colliderect(r2)):
                         e.setHit()
-        if(self.entities[0].getHitstate() or self.entities[1].getHitstate()):
+        if self.entities[0].getHitstate() or self.entities[1].getHitstate():
             return False
         else:
             return True
 
     def run(self, agent1, agent2, fps):
-        self.loadPlayerImages("./res/rockets/rocket 4 blue gray.png","./res/rockets/rocket 3 light blue orange.png")
+        self.loadPlayerImages("./res/rockets/rocket 4 blue gray.png", "./res/rockets/rocket 3 light blue orange.png")
         self.createPlayers(agent1, agent2)
         pygame.init()
 
@@ -147,10 +89,10 @@ class Game:
         time = pygame.time.get_ticks()
         while running:
 
-            deltatime = pygame.time.get_ticks()-time
+            deltatime = pygame.time.get_ticks() - time
             # movePlayers()
-            if(fpslimit):
-                if(deltatime > 1000/60):
+            if fpslimit:
+                if deltatime > 1000 / 60:
                     self.update(deltatime)
                     self.draw(screen)
                     time = pygame.time.get_ticks()
@@ -159,7 +101,7 @@ class Game:
 
                     score_p1 -= 0.1
                     score_p2 -= 0.1
-                    if(score_p1 < 0 or score_p2 < 0):
+                    if score_p1 < 0 or score_p2 < 0:
                         break
 
             else:
@@ -168,7 +110,7 @@ class Game:
                 running = self.testCollision()
                 score_p1 -= 0.1
                 score_p2 -= 0.1
-                if(score_p1 < 0 or score_p2 < 0):
+                if score_p1 < 0 or score_p2 < 0:
                     break
 
             for event in pygame.event.get():
@@ -179,22 +121,16 @@ class Game:
                         self.up = True
                     if event.key == pygame.K_DOWN:
                         self.down = True
-
                     if event.key == pygame.K_LEFT:
                         self.left = True
-
                     if event.key == pygame.K_RIGHT:
                         self.right = True
-
                     if event.key == pygame.K_w:
                         self.w = True
-
                     if event.key == pygame.K_a:
                         self.a = True
-
                     if event.key == pygame.K_d:
                         self.d = True
-
                     if event.key == pygame.K_g:
                         self.fire = True
                     if event.key == pygame.K_f:
@@ -209,14 +145,12 @@ class Game:
                         self.left = False
                     if event.key == pygame.K_RIGHT:
                         self.right = False
-
                     if event.key == pygame.K_w:
                         self.w = False
                     if event.key == pygame.K_a:
                         self.a = False
                     if event.key == pygame.K_d:
                         self.d = False
-
                     if event.key == pygame.K_g:
                         self.fire = False
                     if event.key == pygame.K_f:
@@ -224,8 +158,8 @@ class Game:
 
             length = self.vectorLength
 
-            #print("vectors for agent 1",generateVectors(screen,p,length,vectors,fieldOfVision))
-            #print("vectors for agent 2",generateVectors(screen,p2,length,vectors,fieldOfVision))
+            # print("vectors for agent 1",generateVectors(screen,p,length,vectors,fieldOfVision))
+            # print("vectors for agent 2",generateVectors(screen,p2,length,vectors,fieldOfVision))
 
             # pygame.time.delay(1000)
             pygame.display.update()
@@ -237,5 +171,7 @@ class Game:
             temp = (0, 0)
         self.entities = []
         return temp
-# r=Game()
-# r.run(KeyAgent(),KeyAgent2())
+
+
+r = Game()
+r.run(KeyAgent(), KeyAgent2(), 60)

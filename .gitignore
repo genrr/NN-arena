@@ -1,7 +1,8 @@
 __pycache__/
 *.py[cod]
 
-.venv/
-.vscode/
+venv/
+vscode/
+.idea/
 
 neat-checkpoint*
